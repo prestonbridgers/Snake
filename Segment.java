@@ -8,7 +8,7 @@ import java.awt.Color;
  *	@author Curt Bridgers
  *	@version 10/3/2018
 */
-public class Player
+public class Segment
 {
 	private int gridX;
 	private int gridY;
@@ -25,7 +25,7 @@ public class Player
 	 *	@param locX The initial x position of the player on the grid.
 	 *	@param locY The initial y position of the player on the grid.
 	*/
-	public Player(int locX, int locY)
+	public Segment(int locX, int locY)
 	{
 		gridX = locX;
 		gridY = locY;
@@ -35,39 +35,99 @@ public class Player
 	}
 
 	/**
-	 *	Setter for isGoingUp
-	 *	@param up
+	 *	Getter for gridX.
 	*/
-	public void setIsGoingUp(boolean up)
+	public int getGridX()
 	{
-		isGoingUp = up;
+		return gridX;
 	}
 
 	/**
-	 *	Setter for isGoingDown
-	 *	@param down
+	 *	Getter for gridY.
 	*/
-	public void setIsGoingDown(boolean down)
+	public int getGridY()
 	{
-		isGoingDown = down;
+		return gridY;
 	}
 
 	/**
-	 *	Setter for isGoingLeft
-	 *	@param left
+	 *	Getter for isGoingUp.
+	 *	@return isGoingUp
 	*/
-	public void setIsGoingLeft(boolean left)
+	public boolean getGoingUp()
 	{
-		isGoingLeft = left;
+		return isGoingUp;
 	}
 
 	/**
-	 *	Setter for isGoingRight
-	 *	@param right
+	 *	Getter for isGoingDown.
+	 *	@return isGoingDown
 	*/
-	public void setIsGoingRight(boolean right)
+	public boolean getGoingDown()
 	{
-		isGoingRight = right;
+		return isGoingDown;
+	}
+
+	/**
+	 *	Getter for isGoingLeft.
+	 *	@return isGoingLeft
+	*/
+	public boolean getGoingLeft()
+	{
+		return isGoingLeft;
+	}
+
+	/**
+	 *	Getter for isGoingRight.
+	 *	@return isGoingRight
+	*/
+	public boolean getGoingRight()
+	{
+		return isGoingRight;
+	}
+
+	/**
+	 *	Sets the isGoingUp flag to true and sets the others to false.
+	*/
+	public void goUp()
+	{
+		isGoingUp = true;
+		isGoingDown = false;
+		isGoingLeft = false;
+		isGoingRight = false;
+	}
+
+	/**
+	 *	Sets the isGoingDown flag to true and sets the others to false.
+	*/
+	public void goDown()
+	{
+		isGoingUp = false;
+		isGoingDown = true;
+		isGoingLeft = false;
+		isGoingRight = false;
+	}
+
+	/**
+	 *	Sets the isGoingLeft flag to true and sets the others to false.
+	*/
+	public void goLeft()
+	{
+		isGoingUp = false;
+		isGoingDown = false;
+		isGoingLeft = true;
+		isGoingRight = false;
+	}
+
+	/**
+	 *	Sets the isGoingRight flag to true and sets the others to false.
+	*/
+	public void goRight()
+	{
+		isGoingUp = false;
+		isGoingDown = false;
+		isGoingLeft = false;
+		isGoingRight = true;
 	}
 
 	/**
@@ -91,9 +151,6 @@ public class Player
 
 		x = gridX * Game.GRID_SIZE;
 		y = gridY * Game.GRID_SIZE;
-
-		//System.out.printf("Grid:   (%d, %d\n", gridX, gridY);	//DEBUG
-		//System.out.printf("Actual: (%d, %d)\n", x, y);		//DEBUG
 	}
 
 	/**

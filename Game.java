@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 /**
  *	The Game class is the main hub of the program where the JFrame is created and the gamePanel is added.
@@ -20,7 +21,8 @@ public class Game extends JPanel
 	public static final int GRID_WIDTH = WIDTH / GRID_SIZE;
 	public static final int GRID_HEIGHT = HEIGHT / GRID_SIZE;
 
-	private Player p;
+	private int startingSize = 10;
+	private ArrayList<Segment> snake;
 
 	/**
 	 *	The constructor where certain variables of the gamePanel are set.
@@ -33,6 +35,9 @@ public class Game extends JPanel
 		setMinimumSize(dim);
 		setMaximumSize(dim);
 		setFocusable(true);
+
+		initSnake();
+
 		addKeyListener(new KeyListener()
 		{
 			@Override
@@ -44,31 +49,19 @@ public class Game extends JPanel
 				{
 					case 87: //W
 					case 38: //up_arrow
-						p.setIsGoingUp(true);
-						p.setIsGoingDown(false);
-						p.setIsGoingLeft(false);
-						p.setIsGoingRight(false);
+						snake.get(0).goUp();
 						break;
 					case 65: //A
 					case 37: //left_arrow
-						p.setIsGoingUp(false);
-						p.setIsGoingDown(false);
-						p.setIsGoingLeft(true);
-						p.setIsGoingRight(false);
+						snake.get(0).goLeft();
 						break;
 					case 83: //S
 					case 40: //down_arrow
-						p.setIsGoingUp(false);
-						p.setIsGoingDown(true);
-						p.setIsGoingLeft(false);
-						p.setIsGoingRight(false);
+						snake.get(0).goDown();
 						break;
 					case 68: //D
 					case 39: //right_arrow
-						p.setIsGoingUp(false);
-						p.setIsGoingDown(false);
-						p.setIsGoingLeft(false);
-						p.setIsGoingRight(true);
+						snake.get(0).goRight();
 						break;
 				}
 			}
@@ -76,8 +69,19 @@ public class Game extends JPanel
 			public void keyTyped(KeyEvent e) {}
 		});
 		requestFocus();
+	}
 
-		p = new Player(GRID_WIDTH / 2, GRID_HEIGHT / 2);
+	/**
+	 *	Initializes the snake to the default values (such as if it were to respawn or how it
+	 * 	would be seen at the start of the game).
+	*/
+	private void initSnake()
+	{
+		snake = new ArrayList<Segment>();
+		for(int i = 0; i < startingSize; i++)
+		{
+			snake.add(new Segment((GRID_WIDTH / 2) - i, GRID_HEIGHT / 2));
+		}
 	}
 
 	/**
@@ -87,15 +91,46 @@ public class Game extends JPanel
 	{
 		while(true)
 		{
-			p.move();
+			handleSnakeMovement();
 
 			repaint();
 			try
 			{
-				Thread.sleep(200);
+				Thread.sleep(100);
 			} catch(InterruptedException e)
 			{
 				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 *	Handles the logic for snake movement as well as calls the move() method on all segments.
+	*/
+	private void handleSnakeMovement()
+	{
+		for(int i = 0; i < snake.size(); i++)
+		{
+			snake.get(i).move();
+		}
+
+		for(int i = snake.size() - 1; i > 0; i--)
+		{
+			if(snake.get(i - 1).getGoingUp())
+			{
+				snake.get(i).goUp();
+
+			} else if(snake.get(i - 1).getGoingDown())
+			{
+				snake.get(i).goDown();
+
+			} else if(snake.get(i - 1).getGoingLeft())
+			{
+				snake.get(i).goLeft();
+
+			} else if(snake.get(i - 1).getGoingRight())
+			{
+				snake.get(i).goRight();
 			}
 		}
 	}
@@ -110,6 +145,11 @@ public class Game extends JPanel
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 
+		for(int i = 0; i < snake.size(); i++)
+		{
+			snake.get(i).draw(g);
+		}
+
 		//Drawing the grid
 		///////////////////////////////////////////////////////////////////
 		g.setColor(Color.RED);
@@ -122,8 +162,6 @@ public class Game extends JPanel
 			g.drawLine(0, y * GRID_SIZE, WIDTH, y * GRID_SIZE);
 		}
 		///////////////////////////////////////////////////////////////////
-
-		p.draw(g);
 	}
 
 	/**
