@@ -15,14 +15,18 @@ import java.util.ArrayList;
 public class Game extends JPanel
 {
 	public static final String NAME = "Snake Game";
+
 	public static final int WIDTH = 700;
 	public static final int HEIGHT = 700;
+
 	public static final int GRID_SIZE = 20;
 	public static final int GRID_WIDTH = WIDTH / GRID_SIZE;
 	public static final int GRID_HEIGHT = HEIGHT / GRID_SIZE;
 
-	private int startingSize = 10;
-	private ArrayList<Segment> snake;
+	public static final int INIT_SNAKE_SIZE = 3;
+
+	private Food food;
+	private Snake snake;
 
 	/**
 	 *	The constructor where certain variables of the gamePanel are set.
@@ -36,7 +40,8 @@ public class Game extends JPanel
 		setMaximumSize(dim);
 		setFocusable(true);
 
-		initSnake();
+		food = new Food(GRID_WIDTH, GRID_HEIGHT);
+		snake = new Snake();
 
 		addKeyListener(new KeyListener()
 		{
@@ -49,19 +54,19 @@ public class Game extends JPanel
 				{
 					case 87: //W
 					case 38: //up_arrow
-						snake.get(0).goUp();
+						snake.goUp();
 						break;
 					case 65: //A
 					case 37: //left_arrow
-						snake.get(0).goLeft();
+						snake.goLeft();
 						break;
 					case 83: //S
 					case 40: //down_arrow
-						snake.get(0).goDown();
+						snake.goDown();
 						break;
 					case 68: //D
 					case 39: //right_arrow
-						snake.get(0).goRight();
+						snake.goRight();
 						break;
 				}
 			}
@@ -72,26 +77,25 @@ public class Game extends JPanel
 	}
 
 	/**
-	 *	Initializes the snake to the default values (such as if it were to respawn or how it
-	 * 	would be seen at the start of the game).
-	*/
-	private void initSnake()
-	{
-		snake = new ArrayList<Segment>();
-		for(int i = 0; i < startingSize; i++)
-		{
-			snake.add(new Segment((GRID_WIDTH / 2) - i, GRID_HEIGHT / 2));
-		}
-	}
-
-	/**
 	 *	The game loop where all the stuff gets updated and everything is redrawn to the screen.
 	*/
 	public void go()
 	{
 		while(true)
 		{
-			handleSnakeMovement();
+			snake.move();
+
+			if(snake.eats(food))
+			{
+				snake.grow();
+				food.relocate();
+			}
+
+			if(snake.dies())
+			{
+				snake.reset();
+				food.relocate();
+			}
 
 			repaint();
 			try
@@ -100,37 +104,6 @@ public class Game extends JPanel
 			} catch(InterruptedException e)
 			{
 				e.printStackTrace();
-			}
-		}
-	}
-
-	/**
-	 *	Handles the logic for snake movement as well as calls the move() method on all segments.
-	*/
-	private void handleSnakeMovement()
-	{
-		for(int i = 0; i < snake.size(); i++)
-		{
-			snake.get(i).move();
-		}
-
-		for(int i = snake.size() - 1; i > 0; i--)
-		{
-			if(snake.get(i - 1).getGoingUp())
-			{
-				snake.get(i).goUp();
-
-			} else if(snake.get(i - 1).getGoingDown())
-			{
-				snake.get(i).goDown();
-
-			} else if(snake.get(i - 1).getGoingLeft())
-			{
-				snake.get(i).goLeft();
-
-			} else if(snake.get(i - 1).getGoingRight())
-			{
-				snake.get(i).goRight();
 			}
 		}
 	}
@@ -145,23 +118,8 @@ public class Game extends JPanel
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 
-		for(int i = 0; i < snake.size(); i++)
-		{
-			snake.get(i).draw(g);
-		}
-
-		//Drawing the grid
-		///////////////////////////////////////////////////////////////////
-		g.setColor(Color.RED);
-		for(int x = 0; x < GRID_WIDTH; x++)
-		{
-			g.drawLine(x * GRID_SIZE, 0, x * GRID_SIZE, HEIGHT);
-		}
-		for(int y = 0; y < GRID_HEIGHT; y++)
-		{
-			g.drawLine(0, y * GRID_SIZE, WIDTH, y * GRID_SIZE);
-		}
-		///////////////////////////////////////////////////////////////////
+		snake.draw(g);
+		food.draw(g);
 	}
 
 	/**
