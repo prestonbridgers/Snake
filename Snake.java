@@ -57,6 +57,11 @@ public class Snake
 		}
 	}
 
+	public Segment getSegment(int i)
+	{
+		return snake.get(i);
+	}
+
 	/**
 	 *	This method calls the goUp method for the head segment of the snake.
 	 */

@@ -54,19 +54,31 @@ public class Game extends JPanel
 				{
 					case 87: //W
 					case 38: //up_arrow
-						snake.goUp();
+						if(!snake.getSegment(0).getGoingDown())
+						{
+							snake.goUp();
+						}
 						break;
 					case 65: //A
 					case 37: //left_arrow
-						snake.goLeft();
+						if(!snake.getSegment(0).getGoingRight())
+						{
+							snake.goLeft();
+						}
 						break;
 					case 83: //S
 					case 40: //down_arrow
-						snake.goDown();
+						if(!snake.getSegment(0).getGoingUp())
+						{
+							snake.goDown();
+						}
 						break;
 					case 68: //D
 					case 39: //right_arrow
-						snake.goRight();
+						if(!snake.getSegment(0).getGoingLeft())
+						{
+							snake.goRight();
+						}
 						break;
 				}
 			}
