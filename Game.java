@@ -14,7 +14,7 @@ import java.util.ArrayList;
 */
 public class Game extends JPanel
 {
-	public static final String NAME = "Snake Game";
+	public static final String NAME = "DISCO SNAKE!";
 
 	public static final int WIDTH = 700;
 	public static final int HEIGHT = 700;
