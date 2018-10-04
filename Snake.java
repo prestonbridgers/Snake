@@ -150,7 +150,7 @@ public class Snake
 	 */
 	public void draw(Graphics g)
 	{
-		g.setColor(Color.GREEN);
+
 		for(int i = 0; i < snake.size(); i++)
 		{
 			snake.get(i).draw(g);

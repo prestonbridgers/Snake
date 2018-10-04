@@ -159,7 +159,12 @@ public class Segment
 	*/
 	public void draw(Graphics g)
 	{
-		g.setColor(Color.GREEN);
+		int red = (int) (Math.random() * 256);
+		int green = (int) (Math.random() * 256);
+		int blue = (int) (Math.random() * 256);
+		Color disco = new Color(red, green, blue);
+
+		g.setColor(disco);
 		g.fillRect(x, y, Game.GRID_SIZE, Game.GRID_SIZE);
 	}
 }
