@@ -57,6 +57,11 @@ public class Snake
 		}
 	}
 
+	/**
+	 *	This method is essentially a getter for a segment of the snake at a given index.
+	 *	@param i The index of the segment to return.
+	 *	@return Segment at index i.
+	 */
 	public Segment getSegment(int i)
 	{
 		return snake.get(i);
