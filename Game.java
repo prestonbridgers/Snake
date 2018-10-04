@@ -1,7 +1,9 @@
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -28,6 +30,9 @@ public class Game extends JPanel
 	private Food food;
 	private Snake snake;
 
+	private Score score;
+	private JLabel lblScore;
+
 	/**
 	 *	The constructor where certain variables of the gamePanel are set.
 	*/
@@ -42,6 +47,17 @@ public class Game extends JPanel
 
 		food = new Food(GRID_WIDTH, GRID_HEIGHT);
 		snake = new Snake();
+
+		score = Score.deserialize();
+		if(score == null)
+		{
+			System.out.println("Didn't load score");
+			score = new Score();
+		}
+		lblScore = new JLabel("Score: " + score.getScore() + "\n               Highscore: " + score.getHighscore());
+		lblScore.setFont(new Font("TimesNewRoman", Font.PLAIN, 32));
+		lblScore.setForeground(Color.BLUE);
+		add(lblScore);
 
 		addKeyListener(new KeyListener()
 		{
@@ -101,12 +117,19 @@ public class Game extends JPanel
 			{
 				snake.grow();
 				food.relocate();
+				score.scored();
+				lblScore.setText("Score: " + score.getScore() + "\n              Highscore: " + score.getHighscore());
 			}
 
 			if(snake.dies())
 			{
 				snake.reset();
 				food.relocate();
+
+				score.setHighscore();
+				score.reset();
+				score.serialize(score);
+				lblScore.setText("Score: " + score.getScore() + "\n              Highscore: " + score.getHighscore());
 			}
 
 			repaint();
