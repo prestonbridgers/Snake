@@ -1,11 +1,17 @@
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
@@ -33,6 +39,9 @@ public class Game extends JPanel
 	private Score score;
 	private JLabel lblScore;
 
+	private ActionMap am;
+	private InputMap im;
+
 	/**
 	 *	The constructor where certain variables of the gamePanel are set.
 	*/
@@ -43,7 +52,6 @@ public class Game extends JPanel
 		setPreferredSize(dim);
 		setMinimumSize(dim);
 		setMaximumSize(dim);
-		setFocusable(true);
 
 		food = new Food(GRID_WIDTH, GRID_HEIGHT);
 		snake = new Snake();
@@ -59,49 +67,66 @@ public class Game extends JPanel
 		lblScore.setForeground(Color.BLUE);
 		add(lblScore);
 
-		addKeyListener(new KeyListener()
-		{
-			@Override
-			public void keyPressed(KeyEvent e)
-			{
-				int code = e.getKeyCode();
+		im = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		am = getActionMap();
 
-				switch(code)
+		initInputs();
+	}
+
+	/**
+	 *	This method initializes KeyBindings.
+	 */
+	private void initInputs()
+	{
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false), "goUp");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false), "goUp");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false), "goDown");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, false), "goDown");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, false), "goLeft");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false), "goLeft");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, false), "goRight");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "goRight");
+
+		am.put("goUp", new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				if(!snake.getSegment(0).getGoingDown())
 				{
-					case 87: //W
-					case 38: //up_arrow
-						if(!snake.getSegment(0).getGoingDown())
-						{
-							snake.goUp();
-						}
-						break;
-					case 65: //A
-					case 37: //left_arrow
-						if(!snake.getSegment(0).getGoingRight())
-						{
-							snake.goLeft();
-						}
-						break;
-					case 83: //S
-					case 40: //down_arrow
-						if(!snake.getSegment(0).getGoingUp())
-						{
-							snake.goDown();
-						}
-						break;
-					case 68: //D
-					case 39: //right_arrow
-						if(!snake.getSegment(0).getGoingLeft())
-						{
-							snake.goRight();
-						}
-						break;
+					snake.goUp();
 				}
 			}
-			public void keyReleased(KeyEvent e) {}
-			public void keyTyped(KeyEvent e) {}
 		});
-		requestFocus();
+		am.put("goDown", new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				if(!snake.getSegment(0).getGoingUp())
+				{
+					snake.goDown();
+				}
+			}
+		});
+		am.put("goLeft", new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				if(!snake.getSegment(0).getGoingRight())
+				{
+					snake.goLeft();
+				}
+			}
+		});
+		am.put("goRight", new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				if(!snake.getSegment(0).getGoingLeft())
+				{
+					snake.goRight();
+				}
+			}
+		});
 	}
 
 	/**
