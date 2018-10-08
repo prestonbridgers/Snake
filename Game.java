@@ -6,6 +6,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -190,12 +191,18 @@ public class Game extends JPanel
 	{
 		Game g = new Game();
 
-		JFrame f = new JFrame(NAME);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setResizable(false);
-		f.add(g);
-		f.pack();
-		f.setVisible(true);
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			public void run()
+			{
+				JFrame f = new JFrame(NAME);
+				f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				f.setResizable(false);
+				f.add(g);
+				f.pack();
+				f.setVisible(true);
+			}
+		});
 
 		g.go();
 	}
